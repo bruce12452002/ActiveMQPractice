@@ -1,4 +1,4 @@
-package mq;
+package topic;
 
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -10,7 +10,7 @@ import javax.jms.MessageConsumer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-public class MyActiveMQConsumer {
+public class MyActiveMQTopicConsumer {
     public static void main(String[] args) throws JMSException {
         ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory(
                 ActiveMQConnection.DEFAULT_USER,
@@ -23,10 +23,11 @@ public class MyActiveMQConsumer {
 
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         // queue 名稱必需和 server 的 queue 名稱一樣，回傳值 Queue 也行，是 Destination 的子介面
-        Destination queue = session.createQueue("mmqq");
 
         // -----以下和 Server 不一樣-----
-        MessageConsumer consumer = session.createConsumer(queue);
+        // queue 不用了
+        Destination topic = session.createTopic("topicTopic");
+        MessageConsumer consumer = session.createConsumer(topic);
 
         while (true) {
             TextMessage msg = (TextMessage) consumer.receive(500); // Message 為 TextMessage 父介面
