@@ -3,12 +3,8 @@ package mq;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
 
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.Session;
-import javax.jms.TextMessage;
+import javax.jms.*;
+import java.io.IOException;
 
 public class MyActiveMQConsumer {
     public static void main(String[] args) throws JMSException {
@@ -28,6 +24,25 @@ public class MyActiveMQConsumer {
         // -----以下和 Server 不一樣-----
         MessageConsumer consumer = session.createConsumer(queue);
 
+        // consumer 有兩種方法，一種使用監聽，一種使用 receive，receive 又分阻塞和時間到就走
+        consumer.setMessageListener(m -> {
+            if (m instanceof TextMessage) {
+                TextMessage msg = (TextMessage) m;
+                try {
+                    System.out.println("receive:" + msg.getText());
+                } catch (JMSException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        try {
+            System.in.read(); // 使控制台的紅燈保持在啟動狀態，因為有可能關閉太快而沒收到
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /*
         while (true) {
             TextMessage msg = (TextMessage) consumer.receive(500); // Message 為 TextMessage 父介面
             if (msg != null) {
@@ -36,5 +51,9 @@ public class MyActiveMQConsumer {
                 break;
             }
         }
+                */
+        consumer.close();
+        session.close();
+        connection.close();
     }
 }

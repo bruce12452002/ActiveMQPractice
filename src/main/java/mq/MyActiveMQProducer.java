@@ -30,6 +30,9 @@ public class MyActiveMQProducer {
         sendData(session, producer);
 
 //        session.commit();
+        producer.close();
+        session.close();
+        connection.close();
     }
 
     private static void sendData(Session session, MessageProducer producer) {

@@ -25,11 +25,16 @@ public class MyActiveMQTopicProducer {
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
         // Queue 不用了
-        MessageProducer producer = session.createProducer(null);
+        Topic topic = session.createTopic("topicTopic");// Destination 也行，是 Topic 的父介面
+        MessageProducer producer = session.createProducer(topic);
         producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
         sendData(session, producer);
 
         session.commit();
+
+        producer.close();
+        session.close();
+        connection.close();
     }
 
     private static void sendData(Session session, MessageProducer producer) {
@@ -38,7 +43,6 @@ public class MyActiveMQTopicProducer {
                 TextMessage textMessage = session.createTextMessage("xxx=" + i);
 
                 // -----以下和 Server 不一樣-----
-                Topic topic = session.createTopic("topicTopic");// Destination 也行，是 Topic 的父介面
                 producer.send(topic, textMessage);
                 System.out.println("send:" + textMessage.getText());
             } catch (JMSException e) {

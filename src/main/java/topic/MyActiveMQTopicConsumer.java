@@ -37,5 +37,9 @@ public class MyActiveMQTopicConsumer {
                 break;
             }
         }
+
+        consumer.close();
+        session.close();
+        connection.close();
     }
 }
