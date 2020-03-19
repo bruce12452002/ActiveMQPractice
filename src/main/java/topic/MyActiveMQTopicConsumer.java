@@ -30,7 +30,7 @@ public class MyActiveMQTopicConsumer {
         MessageConsumer consumer = session.createConsumer(topic);
 
         while (true) {
-            TextMessage msg = (TextMessage) consumer.receive(500); // Message 為 TextMessage 父介面
+            TextMessage msg = (TextMessage) consumer.receive(); // Message 為 TextMessage 父介面
             if (msg != null) {
                 System.out.println("receive:" + msg.getText());
             } else {

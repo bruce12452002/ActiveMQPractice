@@ -43,7 +43,7 @@ public class MyActiveMQTopicProducer {
                 TextMessage textMessage = session.createTextMessage("xxx=" + i);
 
                 // -----以下和 Server 不一樣-----
-                producer.send(topic, textMessage);
+                producer.send(textMessage);
                 System.out.println("send:" + textMessage.getText());
             } catch (JMSException e) {
                 e.printStackTrace();
